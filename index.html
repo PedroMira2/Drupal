@@ -492,6 +492,76 @@
             transform: translateY(-3px);
         }
 
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .modal p {
+            margin-bottom: 25px;
+            color: var(--gray-700);
+        }
+
+        .modal-btn {
+            padding: 10px 25px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            background-color: #2f855a;
+        }
+
         /* Footer */
         footer {
             background-color: var(--gray-900);
@@ -866,11 +936,11 @@
             <!-- Contact Form -->
             <div class="sidebar-widget" id="sidebar-contact">
                 <h3 class="widget-title">Entre em Contato</h3>
-                <form class="contact-form">
-                    <input type="text" placeholder="Seu Nome" required>
-                    <input type="email" placeholder="Seu E-mail" required>
-                    <input type="text" placeholder="Assunto" required>
-                    <textarea placeholder="Sua Mensagem" required></textarea>
+                <form class="contact-form" id="sidebarContactForm" action="https://formspree.io/f/mnnrqwoa" method="POST">
+                    <input type="text" name="name" placeholder="Seu Nome" required>
+                    <input type="email" name="email" placeholder="Seu E-mail" required>
+                    <input type="text" name="subject" placeholder="Assunto" required>
+                    <textarea name="message" placeholder="Sua Mensagem" required></textarea>
                     <button type="submit" class="btn">Enviar Mensagem</button>
                 </form>
             </div>
@@ -942,6 +1012,61 @@
         </div>
     </section>
 
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Enviado com sucesso!</h3>
+            <p>Muito obrigado, entraremos em contato em breve.</p>
+            <button class="modal-btn" id="closeModal">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>Drupal by Pedro Mira</h4>
+                    <p>Especialistas em segurança digital e desenvolvimento Drupal. Protegendo e otimizando sua presença online.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Links Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Início</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Serviços</a></li>
+                        <li><a href="#">Sobre</a></li>
+                        <li><a href="#contact">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Serviços</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Auditoria de Segurança</a></li>
+                        <li><a href="#">Proteção contra Malware</a></li>
+                        <li><a href="#">Desenvolvimento Drupal</a></li>
+                        <li><a href="#">Otimização de Performance</a></li>
+                        <li><a href="#">Consultoria em Privacidade</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contato</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> pedroh.novaesmira@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +351 961 493 648</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Aveiro, Portugal</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Drupal by Pedro Mira. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
     <script>
         // Mobile menu toggle
         document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
@@ -965,6 +1090,72 @@
                 }
             });
         });
+
+        // Form submission handling
+        const contactForm = document.getElementById('contactForm');
+        const sidebarContactForm = document.getElementById('sidebarContactForm');
+        const successModal = document.getElementById('successModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // Function to handle form submission
+        function handleFormSubmit(form, event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(form);
+            
+            // Submit form data using fetch
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Show success modal
+                    successModal.classList.add('active');
+                    // Reset form
+                    form.reset();
+                } else {
+                    alert('Ocorreu um erro ao enviar a mensagem. Tente novamente.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao enviar a mensagem. Tente novamente.');
+            });
+        }
+
+        // Add event listeners to forms
+        if (contactForm) {
+            contactForm.addEventListener('submit', (event) => {
+                handleFormSubmit(contactForm, event);
+            });
+        }
+
+        if (sidebarContactForm) {
+            sidebarContactForm.addEventListener('submit', (event) => {
+                handleFormSubmit(sidebarContactForm, event);
+            });
+        }
+
+        // Close modal when clicking the close button
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                successModal.classList.remove('active');
+            });
+        }
+
+        // Close modal when clicking outside the modal
+        if (successModal) {
+            successModal.addEventListener('click', (event) => {
+                if (event.target === successModal) {
+                    successModal.classList.remove('active');
+                }
+            });
+        }
     </script>
 </body>
-</html>f
+</html>
