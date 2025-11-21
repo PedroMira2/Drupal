@@ -393,58 +393,111 @@
             resize: vertical;
         }
 
-        /* Newsletter */
-        .newsletter {
-            background-color: var(--primary);
+        /* Contact Section */
+        .contact-section {
+            background-color: var(--gray-900);
             color: white;
-            padding: 60px 0;
+            padding: 80px 0;
+        }
+
+        .section-title {
             text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            color: white;
         }
 
-        .newsletter h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
         }
 
-        .newsletter p {
-            max-width: 600px;
-            margin: 0 auto 25px;
+        .contact-form-wrapper {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: var(--radius);
         }
 
-        .newsletter-form {
-            display: flex;
-            max-width: 500px;
-            margin: 0 auto;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .newsletter-form input {
-            flex: 1;
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
             padding: 12px 15px;
-            border: none;
-            border-radius: var(--radius) 0 0 var(--radius);
+            border: 1px solid var(--gray-600);
+            border-radius: var(--radius);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
             font-size: 1rem;
         }
 
-        .newsletter-form button {
-            padding: 0 25px;
-            background-color: var(--accent);
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--accent);
+        }
+
+        .contact-item {
+            margin-bottom: 25px;
+        }
+
+        .contact-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-social {
+            margin-top: 30px;
+        }
+
+        .contact-social h4 {
+            margin-bottom: 15px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background-color: var(--gray-700);
+            border-radius: 50%;
             color: white;
-            border: none;
-            border-radius: 0 var(--radius) var(--radius) 0;
-            cursor: pointer;
-            font-weight: 600;
             transition: background-color 0.3s ease;
         }
 
-        .newsletter-form button:hover {
-            background-color: #2c5aa0;
+        .social-icon:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
         }
 
         /* Footer */
         footer {
             background-color: var(--gray-900);
             color: white;
-            padding: 60px 0 30px;
+            padding: 40px 0 20px;
+            border-top: 1px solid var(--gray-700);
         }
 
         .footer-content {
@@ -477,31 +530,9 @@
             color: white;
         }
 
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: var(--gray-700);
-            border-radius: 50%;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--accent);
-        }
-
         .copyright {
             text-align: center;
-            padding-top: 30px;
+            padding-top: 20px;
             border-top: 1px solid var(--gray-700);
             color: var(--gray-500);
             font-size: 0.9rem;
@@ -510,6 +541,10 @@
         /* Responsividade */
         @media (max-width: 992px) {
             .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-container {
                 grid-template-columns: 1fr;
             }
             
@@ -578,7 +613,7 @@
                     <li><a href="#">Blog</a></li>
                     <li><a href="#">Serviços</a></li>
                     <li><a href="#">Sobre</a></li>
-                    <li><a href="#">Contato</a></li>
+                    <li><a href="#contact">Contato</a></li>
                 </ul>
             </nav>
             <button class="mobile-menu-btn">
@@ -591,7 +626,6 @@
     <section class="hero">
         <div class="container">
             <h2>Drupal 11</h2>
-        
         </div>
     </section>
 
@@ -636,7 +670,7 @@
                     <h2>Mercury: Ferramenta útil para iniciantes no Drupal</h2>
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> 12 de Maio, 2023</span>
-                        <span><i class="far fa-user"></i> Carlos Silva</span>
+                        <span><i class="far fa-user"></i> Pedro Mira</span>
                         <span><i class="far fa-folder"></i> Drupal, Desenvolvimento</span>
                     </div>
                 </div>
@@ -666,7 +700,7 @@
                     <h2>Layout Builder: Extensão nativa do Drupal</h2>
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> 10 de Maio, 2023</span>
-                        <span><i class="far fa-user"></i> Carlos Silva</span>
+                        <span><i class="far fa-user"></i> Pedro Mira</span>
                         <span><i class="far fa-folder"></i> Drupal, Desenvolvimento</span>
                     </div>
                 </div>
@@ -696,7 +730,7 @@
                     <h2>Layout Builder +: Versão aprimorada do Layout Builder</h2>
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> 8 de Maio, 2023</span>
-                        <span><i class="far fa-user"></i> Carlos Silva</span>
+                        <span><i class="far fa-user"></i> Pedro Mira</span>
                         <span><i class="far fa-folder"></i> Drupal, Desenvolvimento</span>
                     </div>
                 </div>
@@ -737,7 +771,7 @@
                     <h2>Gutenberg: Editor visual do WordPress adaptado ao Drupal</h2>
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> 5 de Maio, 2023</span>
-                        <span><i class="far fa-user"></i> Carlos Silva</span>
+                        <span><i class="far fa-user"></i> Pedro Mira</span>
                         <span><i class="far fa-folder"></i> Drupal, Desenvolvimento</span>
                     </div>
                 </div>
@@ -778,7 +812,7 @@
                     <h2>Paragraphs: Padrão de mercado no Drupal</h2>
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> 3 de Maio, 2023</span>
-                        <span><i class="far fa-user"></i> Carlos Silva</span>
+                        <span><i class="far fa-user"></i> Pedro Mira</span>
                         <span><i class="far fa-folder"></i> Drupal, Desenvolvimento</span>
                     </div>
                 </div>
@@ -810,7 +844,7 @@
                 <div class="expert-img">
                     <i class="fas fa-user-shield"></i>
                 </div>
-                <h3 class="expert-name">Carlos Silva</h3>
+                <h3 class="expert-name">Pedro Mira</h3>
                 <p class="expert-title">Especialista em Cybersegurança</p>
                 <p class="expert-bio">Com mais de 2 anos de experiência em segurança digital e desenvolvimento Drupal, ofereço soluções completas para proteger e otimizar sua presença online.</p>
                 <a href="https://blog.pedronmira.pt/" class="btn">Contratar Serviços</a>
@@ -830,7 +864,7 @@
             </div>
 
             <!-- Contact Form -->
-            <div class="sidebar-widget" id="contact">
+            <div class="sidebar-widget" id="sidebar-contact">
                 <h3 class="widget-title">Entre em Contato</h3>
                 <form class="contact-form">
                     <input type="text" placeholder="Seu Nome" required>
@@ -843,15 +877,68 @@
         </aside>
     </div>
 
-    <!-- Newsletter -->
-    <section class="newsletter">
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
         <div class="container">
-            <h3>Assine Nossa Newsletter</h3>
-            <p>Receba as últimas novidades sobre cybersegurança, Drupal e desenvolvimento web diretamente no seu e-mail.</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Seu e-mail" required>
-                <button type="submit">Assinar</button>
-            </form>
+            <h2 class="section-title">Contato</h2>
+            <div class="contact-container">
+                <div class="contact-form-wrapper">
+                    <form id="contactForm" action="https://formspree.io/f/xyzjyeqa" method="POST">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Assunto</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">Mensagem</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Enviar Mensagem</button>
+                    </form>
+                </div>
+
+                <div class="contact-info">
+                    <h3>Informações de Contato</h3>
+                    
+                    <div class="contact-item">
+                        <h4><i class="fas fa-envelope"></i>Email</h4>
+                        <p>pedroh.novaesmira@gmail.com</p>
+                        <p>pedroh.novaesmira@hotmail.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <h4><i class="fas fa-phone"></i>Telefone</h4>
+                        <p>+351 961 493 648</p>
+                    </div>
+                    <div class="contact-item">
+                        <h4><i class="fas fa-map-marker-alt"></i>Localização</h4>
+                        <p>Aveiro, Portugal</p>
+                    </div>
+                    <div class="contact-social">
+                        <h4>Redes Sociais</h4>
+                        <div class="social-icons">
+                            <a href="https://www.linkedin.com/in/pedromira2/" class="social-icon" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in" aria-hidden="true" focusable="false"></i>
+                            </a>
+                            <a href="https://github.com/PedroMira2" class="social-icon" aria-label="GitHub">
+                                <i class="fab fa-github" aria-hidden="true" focusable="false"></i>
+                            </a>
+                            <a href="https://x.com/mi47847758" class="social-icon" aria-label="Twitter">
+                                <i class="fab fa-twitter" aria-hidden="true" focusable="false"></i>
+                            </a>
+                            <a href="https://www.instagram.com/pedro_novaesmira?igsh=aXp0dmJvbWI4cG1h&amp;utm_source=qr" class="social-icon" aria-label="Instagram">
+                                <i class="fab fa-instagram" aria-hidden="true" focusable="false"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -860,14 +947,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h4>CyberSec & Drupal</h4>
+                    <h4>Drupal by Pedro Mira</h4>
                     <p>Especialistas em segurança digital e desenvolvimento Drupal. Protegendo e otimizando sua presença online.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
                 </div>
                 <div class="footer-column">
                     <h4>Links Rápidos</h4>
@@ -876,7 +957,7 @@
                         <li><a href="#">Blog</a></li>
                         <li><a href="#">Serviços</a></li>
                         <li><a href="#">Sobre</a></li>
-                        <li><a href="#">Contato</a></li>
+                        <li><a href="#contact">Contato</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -892,14 +973,14 @@
                 <div class="footer-column">
                     <h4>Contato</h4>
                     <ul class="footer-links">
-                        <li><i class="fas fa-envelope"></i> contato@cybersec-drupal.com</li>
-                        <li><i class="fas fa-phone"></i> (11) 99999-9999</li>
-                        <li><i class="fas fa-map-marker-alt"></i> São Paulo, Brasil</li>
+                        <li><i class="fas fa-envelope"></i> pedroh.novaesmira@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +351 961 493 648</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Aveiro, Portugal</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2023 CyberSec & Drupal. Todos os direitos reservados.
+                &copy; 2023 Drupal by Pedro Mira. Todos os direitos reservados.
             </div>
         </div>
     </footer>
@@ -909,6 +990,24 @@
         document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
             document.querySelector('nav ul').classList.toggle('show');
         });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     </script>
 </body>
-</html>
+</html>f
