@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificação de módulos Drupal 11 e Drupal 2.0.0-alpha1 | Blog de Cibersegurança</title>
+    <meta name="description" content="Análise técnica dos módulos Drupal 11 e Drupal 2.0.0-alpha1 com passos de ativação e avaliação de segurança">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --text-primary: #d1d5db;
+            --text-secondary: #8b949e;
+            --accent-blue: #00ffff;
+            --accent-green: #00ffcc;
+            --accent-purple: #8a2be2;
+            --card-bg: rgba(22, 27, 34, 0.8);
+            --border-color: rgba(0, 255, 255, 0.2);
+            --shadow-glow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 204, 0.05) 0%, transparent 20%);
+            position: relative;
+        }
+
+        /* Efeito de partículas binárias */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(13, 17, 23, 0.9), rgba(13, 17, 23, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="0" y="15" font-family="monospace" font-size="10" fill="rgba(0,255,255,0.03)">1010</text><text x="0" y="30" font-family="monospace" font-size="10" fill="rgba(0,255,255,0.03)">0101</text><text x="0" y="45" font-family="monospace" font-size="10" fill="rgba(0,255,255,0.03)">1100</text><text x="0" y="60" font-family="monospace" font-size="10" fill="rgba(0,255,255,0.03)">0011</text></svg>');
+            z-index: -1;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        /* Barra de progresso de leitura */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Cabeçalho */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 999;
+            padding: 1rem 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent-green);
+        }
+
+        .back-btn {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            box-shadow: var(--shadow-glow);
+            color: var(--accent-blue);
+        }
+
+        /* Conteúdo principal */
+        main {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .article-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .article-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-blue);
+            position: relative;
+            display: inline-block;
+        }
+
+        .article-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+        }
+
+        .article-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i {
+            color: var(--accent-green);
+        }
+
+        /* Cards de módulos */
+        .module-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-icon {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            background: rgba(0, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .module-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+        }
+
+        .module-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            font-size: 1.1rem;
+        }
+
+        .steps-list {
+            list-style-type: none;
+            counter-reset: step-counter;
+            margin-bottom: 1.5rem;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .steps-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(0, 255, 255, 0.2);
+            color: var(--accent-blue);
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pros-list, .cons-list {
+            list-style-type: none;
+        }
+
+        .pros-list li, .cons-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+
+        .pros-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .cons-list li::before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .rating-stars i {
+            color: var(--accent-green);
+        }
+
+        .focus {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(0, 255, 204, 0.1);
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .focus i {
+            color: var(--accent-green);
+        }
+
+        /* Tags */
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tag {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Botão voltar ao topo */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Rodapé */
+        footer {
+            background: var(--bg-secondary);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Animações */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-left {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Efeito de digitação no título */
+        .typing-effect {
+            overflow: hidden;
+            border-right: 2px solid var(--accent-blue);
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent-blue) }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+            
+            main {
+                padding: 7rem 1rem 3rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .module-card {
+                padding: 1.5rem;
+            }
+            
+            .module-title {
+                font-size: 1.5rem;
+            }
+            
+            .back-to-top {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de progresso de leitura -->
+    <div class="progress-bar"></div>
+
+    <!-- Cabeçalho -->
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>CYBERBLOG</span>
+            </a>
+            <a href="#" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Voltar ao Blog
+            </a>
+        </nav>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main>
+        <article>
+            <header class="article-header fade-in">
+                <h1 class="article-title typing-effect">Classificação de módulos Drupal 11 e Drupal 2.0.0-alpha1 com passos de ativação</h1>
+                <p class="article-subtitle">Análise técnica e avaliação de segurança dos principais módulos Drupal</p>
+                
+                <div class="article-meta">
+                    <div class="meta-item">
+                        <i class="far fa-calendar"></i>
+                        <span>15 de Maio, 2025</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-clock"></i>
+                        <span>12 min de leitura</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-folder"></i>
+                        <span>Drupal, Segurança Web</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Módulo 1 -->
+            <section class="module-card fade-in">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h2 class="module-title">1. Canvas + Mercury</h2>
+                </div>
+                
+                <p class="module-description">
+                    Uma combinação poderosa e intuitiva para começar rápido no Drupal. O Canvas facilita a edição visual; o Mercury dá flexibilidade via Paragraphs.
+                </p>
+                
+                <h3 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Como ativar e usar
+                </h3>
+                <ol class="steps-list">
+                    <li>Instale o módulo Canvas via Composer: <code>composer require drupal/canvas</code></li>
+                    <li>Ative o módulo no admin do Drupal em Extend</li>
+                    <li>Instale o módulo Mercury: <code>composer require drupal/mercury</code></li>
+                    <li>Ative o módulo Mercury e suas dependências</li>
+                    <li>Acesse a interface de Canvas em <code>/admin/canvas</code> para começar a editar</li>
+                </ol>
+                
+                <div class="pros-cons">
+                    <div>
+                        <h3 class="section-title">
+                            <i class="fas fa-check-circle"></i>
+                            Prós
+                        </h3>
+                        <ul class="pros-list">
+                            <li>Interface visual intuitiva para criação de layouts</li>
+                            <li>Flexibilidade extrema com sistema de Paragraphs</li>
+                            <li>Ótima documentação e comunidade ativa</li>
+                            <li>Compatibilidade com temas responsivos</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="section-title">
+                            <i class="fas fa-times-circle"></i>
+                            Contras
+                        </h3>
+                        <ul class="cons-list">
+                            <li>Curva de aprendizado para usuários avançados</li>
+                            <li>Pode gerar overhead em sites simples</li>
+                            <li>Dependência de múltiplos módulos</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rating">
+                    <span>Avaliação:</span>
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <span>(4.5/5)</span>
+                </div>
+                
+                <div class="focus">
+                    <i class="fas fa-bullseye"></i>
+                    <span><strong>Foco:</strong> Sites que precisam de flexibilidade de conteúdo e edição visual</span>
+                </div>
+            </section>
+
+            <!-- Módulo 2 -->
+            <section class="module-card slide-left">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 class="module-title">2. Security Kit</h2>
+                </div>
+                
+                <p class="module-description">
+                    Módulo essencial para reforçar a segurança do seu site Drupal. Implementa várias camadas de proteção contra ataques comuns.
+                </p>
+                
+                <h3 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Como ativar e usar
+                </h3>
+                <ol class="steps-list">
+                    <li>Instale via Composer: <code>composer require drupal/seckit</code></li>
+                    <li>Ative o módulo em Extend</li>
+                    <li>Configure as opções de segurança em <code>/admin/config/system/seckit</code></li>
+                    <li>Ative as proteções de acordo com as necessidades do seu site</li>
+                    <li>Teste as configurações em ambiente de staging antes de produção</li>
+                </ol>
+                
+                <div class="pros-cons">
+                    <div>
+                        <h3 class="section-title">
+                            <i class="fas fa-check-circle"></i>
+                            Prós
+                        </h3>
+                        <ul class="pros-list">
+                            <li>Proteção contra XSS, CSRF e outros ataques</li>
+                            <li>Configuração granular de políticas de segurança</li>
+                            <li>Headers de segurança implementados automaticamente</li>
+                            <li>Compatível com os padrões mais recentes de segurança</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="section-title">
+                            <i class="fas fa-times-circle"></i>
+                            Contras
+                        </h3>
+                        <ul class="cons-list">
+                            <li>Pode quebrar funcionalidades se mal configurado</li>
+                            <li>Necessita testes cuidadosos em cada ambiente</li>
+                            <li>Algumas configurações podem conflitar com outros módulos</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rating">
+                    <span>Avaliação:</span>
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span>(5/5)</span>
+                </div>
+                
+                <div class="focus">
+                    <i class="fas fa-bullseye"></i>
+                    <span><strong>Foco:</strong> Todos os sites Drupal que precisam de reforço de segurança</span>
+                </div>
+            </section>
+
+            <!-- Módulo 3 -->
+            <section class="module-card slide-left">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h2 class="module-title">3. Performance Booster</h2>
+                </div>
+                
+                <p class="module-description">
+                    Otimizações avançadas de performance para Drupal, incluindo cache agressivo, compressão e lazy loading.
+                </p>
+                
+                <h3 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Como ativar e usar
+                </h3>
+                <ol class="steps-list">
+                    <li>Instale via Composer: <code>composer require drupal/performance_booster</code></li>
+                    <li>Ative o módulo e suas dependências</li>
+                    <li>Configure as opções de cache em <code>/admin/config/development/performance</code></li>
+                    <li>Ajuste as configurações de acordo com o seu ambiente de hospedagem</li>
+                    <li>Monitore o desempenho antes e depois da ativação</li>
+                </ol>
+                
+                <div class="pros-cons">
+                    <div>
+                        <h3 class="section-title">
+                            <i class="fas fa-check-circle"></i>
+                            Prós
+                        </h3>
+                        <ul class="pros-list">
+                            <li>Melhora significativa no tempo de carregamento</li>
+                            <li>Redução no consumo de recursos do servidor</li>
+                            <li>Configurações adaptáveis a diferentes tipos de sites</li>
+                            <li>Suporte a CDN e otimização de imagens</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="section-title">
+                            <i class="fas fa-times-circle"></i>
+                            Contras
+                        </h3>
+                        <ul class="cons-list">
+                            <li>Configuração complexa para iniciantes</li>
+                            <li>Pode causar problemas com conteúdo dinâmico</li>
+                            <li>Necessita limpeza periódica de cache</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rating">
+                    <span>Avaliação:</span>
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <span>(4/5)</span>
+                </div>
+                
+                <div class="focus">
+                    <i class="fas fa-bullseye"></i>
+                    <span><strong>Foco:</strong> Sites com alto tráfego ou que necessitam de otimização extrema de performance</span>
+                </div>
+            </section>
+
+            <!-- Tags -->
+            <div class="article-tags fade-in">
+                <a href="#" class="tag">#Drupal</a>
+                <a href="#" class="tag">#SegurançaWeb</a>
+                <a href="#" class="tag">#CMS</a>
+                <a href="#" class="tag">#OpenSource</a>
+                <a href="#" class="tag">#DesenvolvimentoWeb</a>
+                <a href="#" class="tag">#Performance</a>
+            </div>
+        </article>
+    </main>
+
+    <!-- Botão voltar ao topo -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+            <p class="copyright">© 2025 Pedro Mira | Segurança e Tecnologia</p>
+        </div>
+    </footer>
+
+    <script>
+        // Barra de progresso de leitura
+        window.addEventListener('scroll', function() {
+            const winHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset;
+            const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+            document.querySelector('.progress-bar').style.width = scrollPercent + '%';
+        });
+
+        // Botão voltar ao topo
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animações de entrada
+        const fadeElements = document.querySelectorAll('.fade-in, .slide-left');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Efeito de digitação no título
+        const titleElement = document.querySelector('.typing-effect');
+        const originalText = titleElement.textContent;
+        titleElement.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                titleElement.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 70);
+            } else {
+                titleElement.style.borderRight = 'none';
+            }
+        }
+        
+        // Iniciar efeito de digitação após um breve delay
+        setTimeout(typeWriter, 500);
+    </script>
+</body>
+</html>
