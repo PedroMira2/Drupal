@@ -1,0 +1,13 @@
+name: 'Mercury Editor Task'
+type: module
+description: 'Provides a dedicated ''Mercury Editor'' task (tab) to the editing experience.'
+package: 'Mercury Editor'
+core_version_requirement: ^10.3 || ^11
+configure: mercury_editor_task.settings
+dependencies:
+  - 'mercury_editor:mercury_editor'
+
+# Information added by Drupal.org packaging script on 2025-10-06
+version: '1.0.0-alpha7'
+project: 'mercury_editor_task'
+datestamp: 1759777832

@@ -1,0 +1,17 @@
+langcode: und
+label: Layout
+components:
+  - created
+  - langcode
+  - moderation_state
+  - path
+  - promote
+  - status
+  - sticky
+  - title
+  - translation
+  - uid
+  - url_redirects
+redirect_create: false
+redirect_update: false
+redirect_label: 'Save and edit layout'

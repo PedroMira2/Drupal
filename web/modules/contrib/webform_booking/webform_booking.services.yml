@@ -1,0 +1,6 @@
+services:
+  Drupal\webform_booking\Access\CancelBookingAccessCheck:
+    class: Drupal\webform_booking\Access\CancelBookingAccessCheck
+    arguments: ['@request_stack']
+  webform_booking.translations:
+    class: Drupal\webform_booking\Service\WebformBookingTranslations

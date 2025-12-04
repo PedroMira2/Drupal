@@ -1,0 +1,5 @@
+mercury_editor_task.inline_entity_form:
+  version: 1.0.0
+  css:
+    theme:
+      css/mercury-editor-task-inline-entity-form.css: {}

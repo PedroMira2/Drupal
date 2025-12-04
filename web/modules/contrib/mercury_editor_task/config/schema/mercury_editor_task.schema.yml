@@ -1,0 +1,22 @@
+mercury_editor_task.settings:
+  type: config_object
+  label: 'Mercury Editor Task settings'
+  mapping:
+    label:
+      type: label
+      label: Label
+    components:
+      type: sequence
+      label: 'Form mode components'
+      sequence:
+        type: string
+        label: 'Form mode component'
+    redirect_create:
+      type: boolean
+      label: 'Enable "Save and edit layout" button when creating a node'
+    redirect_update:
+      type: boolean
+      label: 'Enable "Save and edit layout" button when editing a node'
+    redirect_label:
+      type: label
+      label: 'Save and edit layout button label'

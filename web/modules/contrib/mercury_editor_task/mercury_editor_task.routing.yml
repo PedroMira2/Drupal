@@ -1,0 +1,20 @@
+mercury_editor_task.settings:
+  path: '/admin/config/content/mercury-editor/task'
+  defaults:
+    _title: 'Mercury Editor Task Settings'
+    _form: 'Drupal\mercury_editor_task\Form\MercuryEditorTaskSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.node.mercury_editor_task:
+  path: '/node/{node}/mercury-editor'
+  defaults:
+    _entity_form: 'node.default'
+    _title: 'Mercury Editor'
+  requirements:
+    _custom_access: '\Drupal\mercury_editor_task\Controller\MercuryEditorTaskHtmlEntityFormController::checkAccess'
+  options:
+    parameters:
+      node:
+        type: 'entity:node'
+

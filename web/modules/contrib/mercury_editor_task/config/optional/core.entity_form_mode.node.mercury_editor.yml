@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.mercury_editor
+label: Mercury Editor
+description: 'Defines components and fields that will be displayed in the Mercury Editor sidebar.'
+targetEntityType: node
+cache: true

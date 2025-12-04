@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Styling for Mercury Editor Task integration with Inline Entity Form.
+ */
+
+/* Removes an unwanted gap between buttons */
+.ief-entity-operations {
+  display: flex;
+  gap: 0;
+}
+
+/* Minor adjustments to make a link appear more like submit button */
+.ief-entity-operations a.button {
+  padding: 8px 12px;
+  border-color: var(--me-color-border);
+  box-shadow: 0 1px 2px rgb(0, 0, 0, 0.25);
+  line-height: 1.2;
+}

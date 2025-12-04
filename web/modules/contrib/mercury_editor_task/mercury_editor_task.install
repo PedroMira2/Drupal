@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks for the Mercury Editor Task module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_install().
+ */
+function mercury_editor_task_install(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+
+  /** @var \Drupal\mercury_editor_task\MercuryEditorTaskFormDisplayBuilderInterface $form_display_builder */
+  $form_display_builder = \Drupal::service('mercury_editor_task.form_display_builder');
+  $form_display_builder->updateContentTypes();
+}
+
+/**
+ * Add new redirect configuration options with default values.
+ */
+function mercury_editor_task_update_10001(): void {
+  $config = \Drupal::configFactory()->getEditable('mercury_editor_task.settings');
+
+  // Only set defaults if the keys don't already exist.
+  if ($config->get('redirect_create') === NULL) {
+    $config->set('redirect_create', FALSE);
+  }
+
+  if ($config->get('redirect_update') === NULL) {
+    $config->set('redirect_update', FALSE);
+  }
+
+  if ($config->get('redirect_label') === NULL) {
+    $config->set('redirect_label', 'Save and edit layout');
+  }
+
+  $config->save();
+}
